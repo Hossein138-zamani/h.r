@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ورود حرفه‌ای</title>
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;700&display=swap" rel="stylesheet">
+<style>
+    * { box-sizing: border-box; margin:0; padding:0; font-family: 'Vazirmatn', sans-serif; }
+    body { display:flex; justify-content:center; align-items:center; min-height:100vh; background: linear-gradient(135deg, #667eea, #764ba2); }
+    .login-container { background: #fff; padding: 40px 30px; border-radius: 15px; box-shadow: 0 15px 30px rgba(0,0,0,0.2); width: 100%; max-width: 400px; text-align: center; }
+    .login-container h2 { margin-bottom: 30px; color: #333; }
+    
+    .input-group { position: relative; margin-bottom: 25px; }
+    .input-group input { width: 100%; padding: 12px 15px; border-radius: 8px; border: 1px solid #ccc; outline: none; transition: 0.3s; }
+    .input-group input:focus { border-color: #667eea; box-shadow: 0 0 8px rgba(102,126,234,0.4); }
+    .input-group label { position: absolute; top: 50%; left: 15px; transform: translateY(-50%); color: #aaa; pointer-events: none; transition: 0.3s; background: #fff; padding: 0 5px; }
+    .input-group input:focus + label,
+    .input-group input:not(:placeholder-shown) + label { top: -10px; font-size: 0.8em; color: #667eea; }
+    
+    .show-pass { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #667eea; font-size: 0.9em; user-select: none; }
+    
+    .btn { width: 100%; padding: 12px; border:none; border-radius:8px; background: #667eea; color:#fff; font-size: 1em; font-weight: bold; cursor:pointer; transition: 0.3s; }
+    .btn:hover { background: #5a67d8; }
+    
+    .message { margin-top: 15px; font-size: 0.9em; }
+    .message.error { color: #e53e3e; }
+    .message.success { color: #38a169; }
+    
+    @media(max-width:500px){ .login-container { padding: 30px 20px; } }
+</style>
+</head>
+<body>
+
+<div class="login-container">
+    <h2>ورود به حساب کاربری</h2>
+    <form id="loginForm" novalidate>
+        <div class="input-group">
+            <input type="email" id="email" placeholder=" " required>
+            <label for="email">ایمیل</label>
+        </div>
+        <div class="input-group">
+            <input type="password" id="password" placeholder=" " required>
+            <label for="password">رمز عبور</label>
+            <span class="show-pass" id="togglePass">نمایش</span>
+        </div>
+        <button type="submit" class="btn">ورود</button>
+        <div class="message" id="message"></div>
+    </form>
+</div>
+
+<script>
+    const loginForm = document.getElementById('loginForm');
+    const message = document.getElementById('message');
+    const password = document.getElementById('password');
+    const togglePass = document.getElementById('togglePass');
+
+    togglePass.addEventListener('click', () => {
+        if(password.type === 'password'){
+            password.type = 'text';
+            togglePass.textContent = 'مخفی';
+        } else {
+            password.type = 'password';
+            togglePass.textContent = 'نمایش';
+        }
+    });
+
+    loginForm.addEventListener('submit', function(e){
+        e.preventDefault();
+        const emailValue = document.getElementById('email').value.trim();
+        const passwordValue = password.value.trim();
+
+        // بررسی اولیه ایمیل و رمز
+        if(!emailValue || !passwordValue){
+            message.textContent = "تمام فیلدها باید پر شوند!";
+            message.className = "message error";
+            return;
+        }
+
+        // بررسی فرمت ایمیل
+        const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+        if(!emailPattern.test(emailValue)){
+            message.textContent = "ایمیل وارد شده معتبر نیست!";
+            message.className = "message error";
+            return;
+        }
+
+        // بررسی طول رمز عبور
+        if(passwordValue.length < 6){
+            message.textContent = "رمز عبور باید حداقل ۶ کاراکتر باشد!";
+            message.className = "message error";
+            return;
+        }
+
+        // موفقیت آمیز
+        message.textContent = "ورود موفقیت آمیز بود!";
+        message.className = "message success";
+
+        // اینجا می‌توان درخواست به سرور ارسال کرد
+        loginForm.reset();
+    });
+</script>
+
+</body>
+</html>
